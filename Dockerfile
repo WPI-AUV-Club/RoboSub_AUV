@@ -1,4 +1,4 @@
-FROM osrf/ros:jazzy-desktop-full
+FROM ros:jazzy-desktop-full
 
 ARG USERNAME=RoboSub #Can change to any name you want
 ARG USER_UID=1001
@@ -17,6 +17,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
     python3-rosdep \
     git \
     build-essential \
+    libfreetype6-dev \
+    libglm-dev \
+    libsdl2-dev \
+    libfreetype6-dev \
     && rm -rf /var/lib/apt/lists/* \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
@@ -34,6 +38,14 @@ WORKDIR /workspaces/RoboSub_AUV
 
 # Copy the ROS2 workspace
 COPY ros2_ws ./ros2_ws
+
+RUN git clone https://github.com/patrykcieslak/stonefish.git \ 
+    && cd stonefish \ 
+    && mkdir build \ 
+    && cd build \ 
+    && cmake .. \ 
+    && make -j1 \ 
+    && sudo make install
 
 # Build the workspace
 RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install"
