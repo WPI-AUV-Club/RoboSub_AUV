@@ -1,4 +1,4 @@
-FROM ros:jazzy-ros-core
+FROM ros:jazzy-ros-base
 
 ARG USERNAME=RoboSub #Can change to any name you want
 ARG USER_UID=1001
@@ -21,19 +21,24 @@ RUN groupadd --gid $USER_GID $USERNAME \
     libglm-dev \
     libsdl2-dev \
     libfreetype6-dev \
-    ros-jazzy-pcl-conversions \
-    ros-jazzy-pcl-ros \
+    ros-jazzy-pcl-conversions \ 
+    ros-jazzy-image-transport \ 
+    ros-jazzy-geometry-msgs \
+    ros-jazzy-sensor-msgs \
+    ros-jazzy-tf2 \
+    ros-jazzy-tf2-ros \
     && rm -rf /var/lib/apt/lists/* \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-# [Optional] Set the default user. Omit if you want to keep the default as root.
+# Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
 
 
 # Initialize rosdep
 RUN sudo rosdep init || true
 RUN rosdep update
+
 
 # Set working directory
 WORKDIR /workspaces/RoboSub_AUV
@@ -49,8 +54,11 @@ RUN git clone https://github.com/patrykcieslak/stonefish.git \
     && make -j1 \ 
     && sudo make install
 
+# Install dependencies
+RUN rosdep install --from-paths ./ros2_ws/src --ignore-src -r -y
+
 # Build the workspace
-RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install"
+RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
 
 # Source ROS2 and the workspace in bashrc
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc \
