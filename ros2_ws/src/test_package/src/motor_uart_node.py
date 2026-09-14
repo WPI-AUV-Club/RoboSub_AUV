@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
+import math
 from rclpy.node import Node
 from test_package.msg import MotorCommands
 import serial
@@ -75,17 +76,23 @@ class UARTNode(Node):
                 msg.thruster6,
                 msg.thruster7,
             ]
-            
+
+            #Validate speeds are within expected range
             valid_speeds = True
             for speed in new_commanded_speeds:
-                valid_speeds = valid_speeds and speed >= 1 and speed <= 255
+                valid_speeds = valid_speeds and speed >= -1 and speed <= 1
             
-            if (valid_speeds):
-                self.commanded_speeds = new_commanded_speeds
-                print("SELF>New Speeds Recv'd")
-            else:
+            if (not valid_speeds):
                 self.commanded_speeds = [self.full_stop_speed] * 8
                 print("SELF>Improperly formatted commanded speeds")
+                return
+
+            #Convert from a -1 to 1 float into a 1 to 255 int
+            for speed in new_commanded_speeds:
+                speed = math.floor(speed*127+128)
+
+            self.commanded_speeds = new_commanded_speeds
+            print("SELF>New Speeds Recv'd")
 
 
     #ID/File Ops
