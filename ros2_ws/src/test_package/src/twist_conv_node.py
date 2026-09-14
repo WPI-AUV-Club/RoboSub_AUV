@@ -35,10 +35,12 @@ class TwistConvNode(Node):
         self.MAX_ANGULAR_SPEED_Y = 1
         self.MAX_ANGULAR_SPEED_Z = 1
 
-        self.target_linear_vels = Vector3()
-        self.target_angular_vels = Vector3()
+        self.target_vels = Twist()
+        self.battery_v = 12.0
 
-        yaw_pid = PID(1, 0.1, 0.05, setpoint=0)
+        #Yaw axis is the only with a PID as its the only one with a feedback loop. The other axes are open loop
+        self.yaw_pid = PID(1, 0, 0, setpoint=0)
+        self.altitude_pid = PID(1, 0, 0, setpoint=0)
 
         #Periodic Timer
         self.command_period: float = 0.02
@@ -48,33 +50,28 @@ class TwistConvNode(Node):
     #Callbacks
     def timer_callback(self):
         """Method that is periodically called by the timer."""
-        #TODO: RUN PIDS
+         #TODO: Get battery voltage from a topic
+        
+        thrusts_kg = self.get_thrusts_kg(self.target_vels)
+        motor_commands = self.get_motor_commands(thrusts_kg, self.battery_v)
+
+        self.motor_commands_publisher.publish(motor_commands)
 
 
     def desired_twist_subscriber_callback(self, msg: Twist):
         """Method that is called when a new msg is received by the node."""
-        new_linear_vels = msg.linear
-        new_angular_vels = msg.angular
+        new_vels = Twist()
         
-        new_linear_vels.x = self.clamp(new_linear_vels.x, self.MAX_LINEAR_SPEED_X)
-        new_linear_vels.y = self.clamp(new_linear_vels.y, self.MAX_LINEAR_SPEED_Y)
-        new_linear_vels.z = self.clamp(new_linear_vels.z, self.MAX_LINEAR_SPEED_Z)
+        new_vels.linear.x = self.clamp(msg.linear.x, self.MAX_LINEAR_SPEED_X)
+        new_vels.linear.y = self.clamp(msg.linear.y, self.MAX_LINEAR_SPEED_Y)
+        new_vels.linear.z = self.clamp(msg.linear.z, self.MAX_LINEAR_SPEED_Z)
 
-        new_angular_vels.x = self.clamp(new_angular_vels.x, self.MAX_ANGULAR_SPEED_X)
-        new_angular_vels.y = self.clamp(new_angular_vels.y, self.MAX_ANGULAR_SPEED_Y)
-        new_angular_vels.z = self.clamp(new_angular_vels.z, self.MAX_ANGULAR_SPEED_Z)
+        new_vels.angular.x = self.clamp(msg.angular.x, self.MAX_ANGULAR_SPEED_X)
+        new_vels.angular.y = self.clamp(msg.angular.y, self.MAX_ANGULAR_SPEED_Y)
+        new_vels.angular.z = self.clamp(msg.angular.z, self.MAX_ANGULAR_SPEED_Z)
 
-        self.target_linear_vels = new_linear_vels
-        self.target_angular_vels = new_angular_vels
-
-
-        motor_commands = MotorCommands()
-        amazing_quote.id = self.incremental_id
-        amazing_quote.quote = 'Use the force, Pikachu!'
-        amazing_quote.philosopher_name = 'Uncle Ben'
-
-        self.amazing_quote_publisher.publish(amazing_quote)
-        
+        self.target_vels = new_vels
+    
 
     #Util Function
     def clamp(self, n, max_abs_val):
@@ -82,16 +79,27 @@ class TwistConvNode(Node):
     
 
     #Motor Conversions
-    def get_linear_thrusts(self, desired_linear_vel_mps: Vector3):
-        linear_thrusts = Vector3()
+    def get_thrusts_kg(self, vel_mps: Twist):
+        """Convert the desired linear velocity in m/s to a thrust value in kg."""
+        """TODO: Charecterize behavior to determine these equations. For now, we will incorrectly assume a linear relationship between desired velocity and thrust."""
+        thrusts_kg = Twist()
 
-        linear_thrusts.x = desired_linear_vel_mps.x/self.MAX_LINEAR_SPEED_X
-        linear_thrusts.y = desired_linear_vel_mps.y/self.MAX_LINEAR_SPEED_Y
-        linear_thrusts.z = desired_linear_vel_mps.z/self.MAX_LINEAR_SPEED_Z
+        thrusts_kg.linear.x = vel_mps.linear.x/self.MAX_LINEAR_SPEED_X
+        thrusts_kg.linear.y = vel_mps.linear.y/self.MAX_LINEAR_SPEED_Y
+        thrusts_kg.linear.z = vel_mps.linear.z/self.MAX_LINEAR_SPEED_Z
+
+        thrusts_kg.angular.x = vel_mps.angular.x/self.MAX_ANGULAR_SPEED_X
+        thrusts_kg.angular.y = vel_mps.angular.y/self.MAX_ANGULAR_SPEED_Y
+        thrusts_kg.angular.z = vel_mps.angular.z/self.MAX_ANGULAR_SPEED_Z
+
+        return thrusts_kg
 
     def get_motor_speed(thrust_kg, batt_v):
+        """References a 3d surface of best fit to determine the nessecary motor speed to achive the desired thrust at the current battery voltage."""
+        """Motor speed is given as a value from -1 to 1"""
         x = thrust_kg
         y = batt_v
+        """Coefficients were determined by values in the datasheet, discontinuity at low thrusts nessecitates a seperate positive and negative surface of best fit."""
         if (thrust_kg == 0):
             return 0
         elif (thrust_kg > 0):
@@ -99,6 +107,32 @@ class TwistConvNode(Node):
         else:
             a,b,c,d,e,f = -0.78689061,0.51407952,0.08920133,0.02886842,-0.00272574,-0.01048958
         return a + b*x + c*y + d*x**2 + e*y**2 + f*x*y
+
+    def get_motor_commands(self, thrusts_kg: Twist):
+        """Given a twist of thrust in each direcection (For example, thrusts_kg.linear.x is the thrust for each motor in the x direction)
+        Output an array of motor commands."""
+
+        motor_commands = MotorCommands()
+
+        forward_thrust = self.get_motor_speed(thrusts_kg.linear.x, self.battery_v)
+        strafe_thrust = self.get_motor_speed(thrusts_kg.linear.y, self.battery_v)
+        vertical_thrust = self.get_motor_speed(thrusts_kg.linear.z, self.battery_v)
+
+        yaw_thrust = self.get_motor_speed(thrusts_kg.angular.z, self.battery_v)
+        pitch_thrust = self.get_motor_speed(thrusts_kg.angular.y, self.battery_v)
+        roll_thrust = self.get_motor_speed(thrusts_kg.angular.x, self.battery_v)
+
+        # #Forward thrusters
+        # motor_commands.thruster0 = forward_thrust
+        # motor_commands.thruster1 = forward_thrust
+        # motor_commands.thruster2 = forward_thrust
+        # motor_commands.thruster3 = forward_thrust
+
+        # #Rotational thrusters
+        # motor_commands.thruster0 = forward_thrust
+        # motor_commands.thruster1 = forward_thrust
+        # motor_commands.thruster2 = forward_thrust
+        # motor_commands.thruster3 = forward_thrust
 
 
 def main(args=None):
