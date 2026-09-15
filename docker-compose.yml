@@ -1,0 +1,42 @@
+# services:
+#   robosub:
+#     build: .
+#     volumes:
+#       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
+#     stdin_open: true
+#     tty: true
+
+services:
+  robosub:
+    build: .
+    image: robosub_auv:latest
+    container_name: robosub_dev
+    volumes:
+      - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
+      # Keep colcon build artifacts in a named volume so they persist across
+      # container recreation but don't get wiped/rebuilt by image changes
+      - colcon_build:/workspaces/RoboSub_AUV/build
+      - colcon_install:/workspaces/RoboSub_AUV/install
+      - colcon_log:/workspaces/RoboSub_AUV/log
+      # X11 socket for GUI apps / Stonefish simulator rendering
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes_from: []
+    network_mode: host
+    stdin_open: true
+    tty: true
+    # Uncomment if you need GPU passthrough for Stonefish rendering (NVIDIA):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  colcon_build:
+  colcon_install:
+  colcon_log:
