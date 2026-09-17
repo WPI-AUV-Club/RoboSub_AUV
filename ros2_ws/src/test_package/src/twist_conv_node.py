@@ -50,12 +50,11 @@ class TwistConvNode(Node):
     #Callbacks
     def timer_callback(self):
         """Method that is periodically called by the timer."""
-         #TODO: Get battery voltage from a topic
         
-        thrusts_kg = self.get_thrusts_kg(self.target_vels)
-        motor_commands = self.get_motor_commands(thrusts_kg, self.battery_v)
+        thrusts_kg = self.get_thrusts_kg(self.target_linear_vels)
+        motor_speeds = self.get_motor_commands(thrusts_kg, self.battery_v) #TODO: Get battery voltage from a topic
 
-        self.motor_commands_publisher.publish(motor_commands)
+        self.motor_commands_publisher.publish(motor_speeds)
 
 
     def desired_twist_subscriber_callback(self, msg: Twist):
@@ -114,25 +113,28 @@ class TwistConvNode(Node):
 
         motor_commands = MotorCommands()
 
-        forward_thrust = self.get_motor_speed(thrusts_kg.linear.x, self.battery_v)
-        strafe_thrust = self.get_motor_speed(thrusts_kg.linear.y, self.battery_v)
-        vertical_thrust = self.get_motor_speed(thrusts_kg.linear.z, self.battery_v)
+        forward_speed = self.get_motor_speed(thrusts_kg.linear.x, self.battery_v)
+        strafe_speed = self.get_motor_speed(thrusts_kg.linear.y, self.battery_v)
+        vertical_speed = self.get_motor_speed(thrusts_kg.linear.z, self.battery_v)
 
         yaw_thrust = self.get_motor_speed(thrusts_kg.angular.z, self.battery_v)
         pitch_thrust = self.get_motor_speed(thrusts_kg.angular.y, self.battery_v)
         roll_thrust = self.get_motor_speed(thrusts_kg.angular.x, self.battery_v)
 
-        # #Forward thrusters
-        # motor_commands.thruster0 = forward_thrust
-        # motor_commands.thruster1 = forward_thrust
-        # motor_commands.thruster2 = forward_thrust
-        # motor_commands.thruster3 = forward_thrust
+        #TODO: Make these correspond to the actual robot
+        #Forward Facing Thrusters
+        motor_commands.thruster0 =  forward_speed + yaw_thrust - strafe_speed
+        motor_commands.thruster1 =  forward_speed - yaw_thrust + strafe_speed
+        motor_commands.thruster2 = -forward_speed + yaw_thrust + strafe_speed
+        motor_commands.thruster3 = -forward_speed - yaw_thrust - strafe_speed
 
-        # #Rotational thrusters
-        # motor_commands.thruster0 = forward_thrust
-        # motor_commands.thruster1 = forward_thrust
-        # motor_commands.thruster2 = forward_thrust
-        # motor_commands.thruster3 = forward_thrust
+        #Downward facing thrusters
+        motor_commands.thruster0 = vertical_speed + roll_thrust - pitch_thrust
+        motor_commands.thruster1 = vertical_speed + roll_thrust + pitch_thrust
+        motor_commands.thruster2 = vertical_speed - roll_thrust - pitch_thrust
+        motor_commands.thruster3 = vertical_speed - roll_thrust + pitch_thrust
+
+        return motor_commands
 
 
 def main(args=None):
