@@ -4,9 +4,11 @@ ARG USERNAME=RoboSub
 ARG USER_UID=1001
 ARG USER_GID=$USER_UID
 
+RUN apt-get clean && rm -rf /var/lib/apt/lists
+RUN apt update
+
 RUN apt-get update && apt-get install -y curl gnupg2 lsb-release
 
-RUN apt update
 
 # Create user and install packages
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -42,12 +44,12 @@ ENV CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
 
 RUN sudo apt-get update && /bin/bash -c "source /opt/ros/jazzy/setup.bash" 
 
-RUN git clone https://github.com/patrykcieslak/stonefish.git && \
+RUN sudo git clone https://github.com/patrykcieslak/stonefish.git && \
     cd stonefish && \
-    mkdir build && \
+    sudo mkdir build && \
     cd build && \
-    cmake .. && \
-    make -j$(nproc) && \
+    sudo cmake .. && \
+    sudo make -j$(nproc) && \
     sudo make install && \
     sudo ldconfig
 
@@ -55,7 +57,7 @@ RUN git clone https://github.com/patrykcieslak/stonefish.git && \
 RUN rosdep install --from-paths ./ros2_ws/src --ignore-src -r -y
 
 # Build the workspace
-RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
+RUN sudo /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
 
 # Source ROS2 and the workspace in bashrc
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc \

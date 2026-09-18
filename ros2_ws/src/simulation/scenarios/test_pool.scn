@@ -1,6 +1,31 @@
 <?xml version="1.0"?>
 <scenario>
 
+	<robot name="MyROV" fixed="false">
+		<base_link name="Frame" type="model" physical="submerged">
+    			<mesh filename="frame.obj" scale="1.0"/>
+	    		<material naVme="Aluminium"/>
+	    		<look name="Grey"/>
+	    		<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+	    		<mass value="12.0"/>
+	    		<inertia ixx="0.15" iyy="0.20" izz="0.18"/>
+	    		<cg xyz="0.0 0.0 0.02"/>
+	  	</base_link>
+
+	  <actuator name="Thruster1" type="thruster">
+		  
+		  <specs thrust_coeff="0.45" thrust_coeff_backward="0.35" torque_coeff="0.02" max_rpm="3500" inverted="false"/>
+	    	  <propeller diameter="0.076" right="true">
+	      	  <mesh filename="propeller.obj" scale="1.0"/>
+	      	  <material name="Steel"/>
+	      	  <look name="Black"/>
+	    	  </propeller>
+	    	  <origin xyz="0.15 0.10 0.0" rpy="0.0 0.0 0.7854"/>
+    		  <link name="Frame"/>
+  		</actuator>
+
+  		
+	</robot>
     <looks>
 
         <look name="PoolTexture" gray="1.0" roughness="1.0" metalness="0.1" texture="test_pool/texture/PoolTexture.png"/>
@@ -61,6 +86,8 @@
 		<look name="Gray"/>
 		<world_transform xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 	</static>
+
+
 
 
 </scenario>
