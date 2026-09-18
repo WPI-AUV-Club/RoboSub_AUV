@@ -1,9 +1,0 @@
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/uninstall.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/auv_camera_uninstall.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/test.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/edit_cache.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/rebuild_cache.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/list_install_components.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/install.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/install/local.dir
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_camera/CMakeFiles/install/strip.dir
