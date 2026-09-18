@@ -1,1 +1,2 @@
-/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors/ament_cmake_environment_hooks/local_setup.dsv
+source;share/auv_motors/environment/ament_prefix_path.sh
+source;share/auv_motors/environment/path.sh

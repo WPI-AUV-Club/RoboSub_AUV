@@ -43,7 +43,75 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/" TYPE DIRECTORY FILES "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/src")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/auv_planning" TYPE PROGRAM FILES
+    "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/src/controls.py"
+    "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/src/localization.py"
+    "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/src/path_planning.py"
+    "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/src/state_machine.py"
+    )
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/package_run_dependencies" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/auv_planning")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/parent_prefix_path" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/auv_planning")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/environment" TYPE FILE FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/environment" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/ament_prefix_path.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/environment" TYPE FILE FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/environment" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/path.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/local_setup.bash")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/local_setup.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/local_setup.zsh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/local_setup.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_environment_hooks/package.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/packages" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_index/share/ament_index/resource_index/packages/auv_planning")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning/cmake" TYPE FILE FILES
+    "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_core/auv_planningConfig.cmake"
+    "/home/bryson/RoboSub_AUV/ros2_ws/build/auv_planning/ament_cmake_core/auv_planningConfig-version.cmake"
+    )
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/auv_planning" TYPE FILE FILES "/home/bryson/RoboSub_AUV/ros2_ws/src/auv_planning/package.xml")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
