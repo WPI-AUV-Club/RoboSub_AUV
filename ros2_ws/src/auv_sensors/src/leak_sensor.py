@@ -1,13 +1,14 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
+from std_msgs.msg import Int32
 
 class LeakSensorNode(Node):
     def __init__(self):
         super().__init__('leak_sensor_node')
 
         self.emergency_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/goal", 
             10
         )

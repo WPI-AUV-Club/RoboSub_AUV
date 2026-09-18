@@ -1,0 +1,25 @@
+[0.050s] Invoking command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors -- -j8 -l8
+[0.101s] Invoked command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors -- -j8 -l8
+[0.102s] Invoking command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors
+[0.108s] -- Install configuration: ""
+[0.108s] -- Execute custom install script
+[0.108s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors//src/motor_commands.py
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors//src/uart_manager.py
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/lib/auv_motors/motor_commands.py
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/lib/auv_motors/uart_manager.py
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/package_run_dependencies/auv_motors
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/parent_prefix_path/auv_motors
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/ament_prefix_path.sh
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/ament_prefix_path.dsv
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/path.sh
+[0.109s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/path.dsv
+[0.110s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.bash
+[0.110s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.sh
+[0.110s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.zsh
+[0.110s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.dsv
+[0.110s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/package.dsv
+[0.118s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/packages/auv_motors
+[0.118s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/cmake/auv_motorsConfig.cmake
+[0.118s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/cmake/auv_motorsConfig-version.cmake
+[0.118s] -- Up-to-date symlink: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/package.xml
+[0.120s] Invoked command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors

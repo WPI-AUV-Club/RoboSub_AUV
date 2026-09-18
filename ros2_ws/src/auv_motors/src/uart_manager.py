@@ -7,6 +7,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 from test_package.msg import MotorCommands
 from datetime import datetime
+from std_msgs.msg import Int32
 
 """
 Send out motor commands
@@ -20,7 +21,7 @@ class UARTManagerNode(Node):
 
         #Topic Subscription
         self.motor_speed_subscription = self.create_subscription(
-            int,
+            Int32,
             "/motor/speeds",
             self.handle_speeds,
             10,
@@ -69,7 +70,7 @@ class UARTManagerNode(Node):
 
         self.send_command()
 
-    def handle_speeds(self, msg: int):
+    def handle_speeds(self, msg: Int32):
         """Method that is called when a new msg is received by the node."""
         new_commanded_speeds = [
             msg.thruster0,

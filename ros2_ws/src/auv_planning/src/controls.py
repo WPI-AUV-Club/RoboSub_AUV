@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+from sympy import true
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
+from geometry_msgs.msg import Twist
 
 """
 Takes in path plan and do controls
@@ -14,7 +18,7 @@ class ControlsNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.path_subscription = self.create_subscription(
-            int,
+            Int32,
             "/path",
             self.handle_path,
             10,
@@ -22,7 +26,7 @@ class ControlsNode(Node):
         )
 
         self.state_subscription = self.create_subscription(
-            int,
+            Int32,
             "/localization/state",
             self.handle_state,
             10,
@@ -30,10 +34,18 @@ class ControlsNode(Node):
         )
 
         self.twist_publisher = self.create_publisher(
-            int, 
+            Twist, 
             "/twist", 
             10
         )
+
+        self.timer = self.create_timer(1.0, self.publish_twist)
+
+    def publish_twist(self):
+        msg = Twist()
+        msg.linear.x = 1.0  # placeholder value for testing
+        self.twist_publisher.publish(msg)
+        self.get_logger().info("Published twist")
 
     def handle_path(self, msg: int):
         return

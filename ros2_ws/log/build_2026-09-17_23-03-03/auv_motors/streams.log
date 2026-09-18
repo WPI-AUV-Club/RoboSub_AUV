@@ -1,0 +1,61 @@
+[0.016s] Invoking command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/bryson/RoboSub_AUV/ros2_ws/src/auv_motors -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors
+[0.086s] -- The C compiler identification is GNU 13.3.0
+[0.199s] -- The CXX compiler identification is GNU 13.3.0
+[0.214s] -- Detecting C compiler ABI info
+[0.296s] -- Detecting C compiler ABI info - done
+[0.304s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.305s] -- Detecting C compile features
+[0.305s] -- Detecting C compile features - done
+[0.313s] -- Detecting CXX compiler ABI info
+[0.396s] -- Detecting CXX compiler ABI info - done
+[0.406s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.407s] -- Detecting CXX compile features
+[0.407s] -- Detecting CXX compile features - done
+[0.426s] -- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.579s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.653s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.726s] -- Found rclpy: 7.1.12 (/opt/ros/jazzy/share/rclpy/cmake)
+[0.731s] -- Found rclcpp: 28.1.22 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.810s] -- Found rosidl_generator_c: 4.6.9 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.838s] -- Found rosidl_generator_cpp: 4.6.9 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.870s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.903s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.038s] -- Found rmw_implementation_cmake: 7.3.3 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[1.045s] -- Found rmw_cyclonedds_cpp: 2.2.4 (/opt/ros/jazzy/share/rmw_cyclonedds_cpp/cmake)
+[1.102s] -- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+[1.220s] -- Found std_msgs: 5.3.8 (/opt/ros/jazzy/share/std_msgs/cmake)
+[1.243s] -- Found ament_lint_auto: 0.17.5 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[1.371s] -- Added test 'flake8' to check Python code syntax and style conventions
+[1.371s] -- Configured 'flake8' exclude dirs and/or files: 
+[1.372s] -- Added test 'lint_cmake' to check CMake code style
+[1.373s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[1.374s] -- Added test 'xmllint' to check XML markup files
+[1.376s] -- Configuring done (1.4s)
+[1.382s] -- Generating done (0.0s)
+[1.385s] -- Build files have been written to: /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors
+[1.401s] Invoked command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/bryson/RoboSub_AUV/ros2_ws/src/auv_motors -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors
+[1.401s] Invoking command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors -- -j8 -l8
+[1.434s] Invoked command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors -- -j8 -l8
+[1.435s] Invoking command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors
+[1.440s] -- Install configuration: ""
+[1.441s] -- Execute custom install script
+[1.441s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors//src/motor_commands.py
+[1.447s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors//src/uart_manager.py
+[1.454s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/lib/auv_motors/motor_commands.py
+[1.461s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/lib/auv_motors/uart_manager.py
+[1.468s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/package_run_dependencies/auv_motors
+[1.474s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/parent_prefix_path/auv_motors
+[1.480s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/ament_prefix_path.sh
+[1.486s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/ament_prefix_path.dsv
+[1.492s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/path.sh
+[1.500s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/environment/path.dsv
+[1.506s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.bash
+[1.512s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.sh
+[1.519s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.zsh
+[1.525s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/local_setup.dsv
+[1.532s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/package.dsv
+[1.539s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/ament_index/resource_index/packages/auv_motors
+[1.545s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/cmake/auv_motorsConfig.cmake
+[1.551s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/cmake/auv_motorsConfig-version.cmake
+[1.558s] -- Symlinking: /home/bryson/RoboSub_AUV/ros2_ws/install/auv_motors/share/auv_motors/package.xml
+[1.566s] Invoked command in '/home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/bryson/turtlebot3_ws/install/turtlebot3_teleop:/home/bryson/turtlebot3_ws/install/turtlebot3_example:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/bryson/RoboSub_AUV/ros2_ws/build/auv_motors

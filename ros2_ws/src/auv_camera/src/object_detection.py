@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 """
 Turn processed camera data into object info
@@ -14,7 +15,7 @@ class ObjectDetectionNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.camera_filtered_subscription = self.create_subscription(
-            int,
+            Int32,
             "/camera/data/raw",
             self.handle_camera_filtered,
             10,
@@ -22,12 +23,12 @@ class ObjectDetectionNode(Node):
         )
 
         self.camera_detections_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/camera/data/detections", 
             10
         )
 
-    def handle_camera_filtered(self, msg: int):
+    def handle_camera_filtered(self, msg: Int32):
         return
 
 def main(args=None):

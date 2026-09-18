@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
+from std_msgs.msg import Int32
 
 """
 Camera
@@ -11,7 +12,7 @@ class CameraSensorNode(Node):
         super().__init__('camera_sensor_node')
 
         self.camera_raw_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/camera/data/raw", 
             10
         )

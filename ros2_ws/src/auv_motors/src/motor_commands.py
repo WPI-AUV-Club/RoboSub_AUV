@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 """
 Convert direction vectors into motor commands
@@ -14,7 +15,7 @@ class MotorCommandsNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.twist_subscription = self.create_subscription(
-            int,
+            Int32,
             "/twist",
             self.handle_twist,
             10,
@@ -22,12 +23,12 @@ class MotorCommandsNode(Node):
         )
 
         self.motor_speeds_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/motor/speeds", 
             10
         )
 
-    def handle_twist(self, msg: int):
+    def handle_twist(self, msg: Int32):
         return
 
     

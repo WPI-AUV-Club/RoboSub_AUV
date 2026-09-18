@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 class LocalizationNode(Node):
     def __init__(self):
@@ -10,7 +11,7 @@ class LocalizationNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.camera_filtered_subscription = self.create_subscription(
-            int,
+            Int32,
             "/camera/data/filtered",
             self.handle_camera_filtered,
             10,
@@ -18,7 +19,7 @@ class LocalizationNode(Node):
         )
 
         self.sensor_filtered_subscription = self.create_subscription(
-            int,
+            Int32,
             "/sensor/data/filtered",
             self.handle_sensor_filtered,
             10,
@@ -26,15 +27,15 @@ class LocalizationNode(Node):
         )
 
         self.state_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/localization/state", 
             10
         )
 
-    def handle_camera_filtered(self, msg: int):
+    def handle_camera_filtered(self, msg: Int32):
         return
 
-    def handle_sensor_filtered(self, msg: int):
+    def handle_sensor_filtered(self, msg: Int32):
         return
 
 def main(args=None):

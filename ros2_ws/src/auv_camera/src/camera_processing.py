@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 """
 Process the raw camera data and send it to object detection
@@ -14,7 +15,7 @@ class CameraProcessingNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.camera_raw_subscription = self.create_subscription(
-            int,
+            Int32,
             "/camera/data/raw",
             self.handle_camera_raw,
             10,
@@ -22,12 +23,12 @@ class CameraProcessingNode(Node):
         )
 
         self.camera_filtered_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/camera/data/filtered", 
             10
         )
 
-    def handle_camera_raw(self, msg: int):
+    def handle_camera_raw(self, msg: Int32):
         return
 
 def main(args=None):

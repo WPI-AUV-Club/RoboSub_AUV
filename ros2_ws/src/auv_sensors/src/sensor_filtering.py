@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 class SensorFilteringNode(Node):
     def __init__(self):
@@ -10,7 +11,7 @@ class SensorFilteringNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.sensor_raw_subscription = self.create_subscription(
-            int,
+            Int32,
             "/sensor/data/raw",
             self.handle_sensor_raw,
             10,
@@ -18,12 +19,12 @@ class SensorFilteringNode(Node):
         )
 
         self.sensor_filtered_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/sensor/data/filtered", 
             10
         )
 
-    def handle_sensor_raw(self, msg: int):
+    def handle_sensor_raw(self, msg: Int32):
         return
 
 def main(args=None):

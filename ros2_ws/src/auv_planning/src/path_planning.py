@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from std_msgs.msg import Int32
 
 class PathPlanningNode(Node):
     def __init__(self):
@@ -10,7 +11,7 @@ class PathPlanningNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         self.state_subscription = self.create_subscription(
-            int,
+            Int32,
             "/localization/state",
             self.handle_state,
             10,
@@ -18,7 +19,7 @@ class PathPlanningNode(Node):
         )
 
         self.goal_subscription = self.create_subscription(
-            int,
+            Int32,
             "/goal",
             self.handle_goal,
             10,
@@ -26,15 +27,15 @@ class PathPlanningNode(Node):
         )
 
         self.path_publisher = self.create_publisher(
-            int, 
+            Int32, 
             "/path", 
             10
         )
 
-    def handle_state(self, msg: int):
+    def handle_state(self, msg: Int32):
         return
 
-    def handle_goal(self, msg: int):
+    def handle_goal(self, msg: Int32):
         return
 
 def main(args=None):
