@@ -37,12 +37,13 @@ RUN sudo rosdep init || true
 RUN rosdep update
 
 WORKDIR /workspaces/RoboSub_AUV
-
+RUN sudo apt-get update 
 COPY ros2_ws ./ros2_ws
+
 
 ENV CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
 
-RUN sudo apt-get update && /bin/bash -c "source /opt/ros/jazzy/setup.bash" 
+RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash" 
 
 RUN sudo git clone https://github.com/patrykcieslak/stonefish.git && \
     cd stonefish && \
@@ -57,7 +58,7 @@ RUN sudo git clone https://github.com/patrykcieslak/stonefish.git && \
 RUN rosdep install --from-paths ./ros2_ws/src --ignore-src -r -y
 
 # Build the workspace
-RUN sudo /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
+RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
 
 # Source ROS2 and the workspace in bashrc
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc \

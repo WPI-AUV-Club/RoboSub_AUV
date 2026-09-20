@@ -1,10 +1,10 @@
-# services:
-#   robosub:
-#     build: .
-#     volumes:
-#       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
-#     stdin_open: true
-#     tty: true
+# # services:
+# #   robosub:
+# #     build: .
+# #     volumes:
+# #       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
+# #     stdin_open: true
+# #     tty: true
 
 services:
   robosub:
@@ -41,3 +41,25 @@ volumes:
   colcon_build:
   colcon_install:
   colcon_log:
+
+# services:
+#   robosub:
+#     build: .
+#     image: robosub_auv:latest
+#     container_name: robosub_dev
+#     volumes:
+#       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
+#       - colcon_build:/workspaces/RoboSub_AUV/build
+#       - colcon_install:/workspaces/RoboSub_AUV/install
+#       - colcon_log:/workspaces/RoboSub_AUV/log
+#       - ./.docker.xauth:/tmp/.docker.xauth:rw
+#     environment:
+#       - XAUTHORITY=/tmp/.docker.xauth
+#       - QT_X11_NO_MITSHM=1
+#     stdin_open: true
+#     tty: true
+
+# volumes:
+#   colcon_build:
+#   colcon_install:
+#   colcon_log:
