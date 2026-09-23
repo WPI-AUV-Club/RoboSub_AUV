@@ -16,6 +16,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     python3-colcon-common-extensions \
     python3-rosdep \
     git \
+    python3-pip \
     build-essential \
     ros-jazzy-pcl-conversions \
     ros-jazzy-pcl-ros \
@@ -26,6 +27,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
 
+# Install python libraries
+RUN pip3 install pyserial --break-system-packages
+RUN pip3 install Jetson.GPIO --break-system-packages
+RUN pip3 install simple-pid --break-system-packages
 
 # Initialize rosdep
 RUN sudo rosdep init || true

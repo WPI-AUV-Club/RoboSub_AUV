@@ -70,7 +70,7 @@ class UARTManagerNode(Node):
 
         self.send_command()
 
-    def handle_speeds(self, msg: Int32):
+    def handle_speeds(self, msg: MotorCommands):
         """Method that is called when a new msg is received by the node."""
         new_commanded_speeds = [
             msg.thruster0,
