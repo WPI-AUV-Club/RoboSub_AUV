@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+from auv_motors.msg import motor_commands_msg
 import rclpy
 import math
 import serial
@@ -5,10 +8,7 @@ import time
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
-from test_package.msg import MotorCommands
 from datetime import datetime
-from std_msgs.msg import Int32
-
 """
 Send out motor commands
 """
@@ -21,7 +21,7 @@ class UARTManagerNode(Node):
 
         #Topic Subscription
         self.motor_speed_subscription = self.create_subscription(
-            Int32,
+            motor_commands_msg,
             "/motor/speeds",
             self.handle_speeds,
             10,
