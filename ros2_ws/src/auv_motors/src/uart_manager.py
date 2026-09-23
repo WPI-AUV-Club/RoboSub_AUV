@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from auv_motors.msg import motor_commands_msg
+from auv_motors.msg import MotorCommands
 import rclpy
 import math
 import serial
@@ -21,7 +21,7 @@ class UARTManagerNode(Node):
 
         #Topic Subscription
         self.motor_speed_subscription = self.create_subscription(
-            motor_commands_msg,
+            MotorCommands,
             "/motor/speeds",
             self.handle_speeds,
             10,

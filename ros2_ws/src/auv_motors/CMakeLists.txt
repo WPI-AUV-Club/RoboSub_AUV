@@ -13,7 +13,28 @@ find_package(std_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
+#### ROS2 Interface Directives ####
+set(interface_files
+  # Messages/Services/Actions
+  "msg/MotorCommands.msg"
+)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${interface_files}
+  DEPENDENCIES
+)
+ament_export_dependencies(
+  rosidl_default_runtime
+)
+#### ROS2 Interface Directives [END] ####
+
+install(DIRECTORY
+  #launch dir to be added later
+  #stonefish may also be added here or in another container
+  src
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 install(DIRECTORY
   #launch dir to be added later
