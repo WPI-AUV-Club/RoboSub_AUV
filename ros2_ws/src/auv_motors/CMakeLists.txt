@@ -18,7 +18,7 @@ find_package(rosidl_default_generators REQUIRED)
 #### ROS2 Interface Directives ####
 set(interface_files
   # Messages/Services/Actions
-  "msg/MotorCommands.msg"
+  "msg/MotorSpeeds.msg"
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${interface_files}

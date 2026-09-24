@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from auv_motors.msg import MotorCommands
+from auv_motors.msg import MotorSpeeds
 import rclpy
 import math
 import serial
@@ -21,7 +21,7 @@ class UARTManagerNode(Node):
 
         #Topic Subscription
         self.motor_speed_subscription = self.create_subscription(
-            MotorCommands,
+            MotorSpeeds,
             "/motor/speeds",
             self.handle_speeds,
             10,
@@ -70,7 +70,7 @@ class UARTManagerNode(Node):
 
         self.send_command()
 
-    def handle_speeds(self, msg: MotorCommands):
+    def handle_speeds(self, msg: MotorSpeeds):
         """Method that is called when a new msg is received by the node."""
         new_commanded_speeds = [
             msg.thruster0,
