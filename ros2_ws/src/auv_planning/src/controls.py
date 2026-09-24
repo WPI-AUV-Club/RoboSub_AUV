@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from sympy import true
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
