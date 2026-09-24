@@ -19,6 +19,7 @@ find_package(rosidl_default_generators REQUIRED)
 set(interface_files
   # Messages/Services/Actions
   "msg/MotorCommands.msg"
+  "msg/MotorSpeeds.msg"
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${interface_files}
@@ -30,15 +31,6 @@ ament_export_dependencies(
 #### ROS2 Interface Directives [END] ####
 
 install(DIRECTORY
-  #launch dir to be added later
-  #stonefish may also be added here or in another container
-  src
-  DESTINATION share/${PROJECT_NAME}/
-)
-
-install(DIRECTORY
-  #launch dir to be added later
-  #stonefish may also be added here or in another container
   src
   DESTINATION share/${PROJECT_NAME}/
 )
