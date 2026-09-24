@@ -63,3 +63,22 @@ volumes:
 #   colcon_build:
 #   colcon_install:
 #   colcon_log:
+# services:
+#   auv:
+#     image: auv:latest
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: auv_core
+#     restart: unless-stopped
+#     privileged: true
+#     devices:
+#       - /dev/ttyTHS1:/dev/ttyTHS1
+#       - /dev/gpiochip0:/dev/gpiochip0
+#       - /dev/gpiochip1:/dev/gpiochip1
+#     network_mode: host
+#     environment:
+#       - ROS_DOMAIN_ID=0
+#     stdin_open: true
+#     tty: true
+#     command: /bin/bash

@@ -1,69 +1,42 @@
-FROM ros:jazzy-ros-base
+FROM ros:jazzy-ros-core
 
-ARG USERNAME=RoboSub
-ARG USER_UID=1001
-ARG USER_GID=$USER_UID
+# Create the user
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    sudo \
+    dos2unix \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    git \
+    python3-pip \
+    build-essential \
+    ros-jazzy-pcl-conversions \
+    ros-jazzy-pcl-ros \
+    ros-$ROS_DISTRO-foxglove-bridge \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists
-RUN apt update
+# Install python libraries
+RUN pip3 install --no-cache-dir --break-system-packages \
+    pyserial \
+    Jetson.GPIO \
+    simple-pid
 
-RUN apt-get update && apt-get install -y curl gnupg2 lsb-release
+# only if you actually rosdep install somewhere
+# RUN rosdep update   
 
-
-# Create user and install packages
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && apt-get install -y \
-        sudo \
-        dos2unix \
-        python3-colcon-common-extensions \
-        python3-rosdep \
-        git \
-        build-essential \
-        ros-jazzy-pcl-conversions \
-        ros-jazzy-pcl-ros \
-	    libglm-dev \
-    	libsdl2-dev \
-    	libfreetype6-dev \
-    	libglew-dev \
-    pkg-config \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
-
-USER $USERNAME
-
-RUN sudo rosdep init || true
-RUN rosdep update
-
+# Set working directory
 WORKDIR /workspaces/RoboSub_AUV
-RUN sudo apt-get update 
+
+# Copy the ROS2 workspace
 COPY ros2_ws ./ros2_ws
-
-
-ENV CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
-
-RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash" 
-
-RUN sudo git clone https://github.com/patrykcieslak/stonefish.git && \
-    cd stonefish && \
-    sudo mkdir build && \
-    cd build && \
-    sudo cmake .. && \
-    sudo make -j$(nproc) && \
-    sudo make install && \
-    sudo ldconfig
-
-# Install dependencies
-RUN rosdep install --from-paths ./ros2_ws/src --ignore-src -r -y
 
 # Build the workspace
 RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV && colcon build --symlink-install --parallel-workers 1"
 
-# Source ROS2 and the workspace in bashrc
+# Source ROS2 and workspace in bashrc for interactive shells
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc \
     && echo "source /workspaces/RoboSub_AUV/install/setup.bash" >> ~/.bashrc
 
+<<<<<<< HEAD
 # Make Python scripts executable
-RUN find /workspaces/RoboSub_AUV/ros2_ws/src -name "*.py" -exec sudo chmod +x {} \;
-
+RUN find /workspaces/RoboSub_AUV/ros2_ws/src -name "*.py" -exec chmod +x {} \;

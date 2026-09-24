@@ -1,0 +1,16 @@
+.git
+.github
+.gitignore
+.gitattributes
+build/
+install/
+log/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.vscode/
+deploy-to-jetson.sh

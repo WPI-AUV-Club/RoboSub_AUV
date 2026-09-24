@@ -29,6 +29,7 @@ install(PROGRAMS
   src/localization.py
   src/path_planning.py
   src/state_machine.py
+  src/teleop_controls.py
   DESTINATION lib/auv_planning
 )
 
