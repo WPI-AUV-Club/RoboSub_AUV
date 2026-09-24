@@ -1,16 +1,11 @@
-# # services:
-# #   robosub:
-# #     build: .
-# #     volumes:
-# #       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
-# #     stdin_open: true
-# #     tty: true
 
 services:
   robosub:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     image: robosub_auv:latest
-    container_name: robosub_dev
+    container_name: auv_core
     volumes:
       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
       # Keep colcon build artifacts in a named volume so they persist across
@@ -24,10 +19,18 @@ services:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - ROS_DOMAIN_ID=0
+    devices:
+      - /dev/ttyTHS1:/dev/ttyTHS1
+      - /dev/gpiochip0:/dev/gpiochip0
+      - /dev/gpiochip1:/dev/gpiochip1
     volumes_from: []
     network_mode: host
     stdin_open: true
     tty: true
+    command: /bin/bash
+    restart: unless-stopped
+    privileged: true
     # Uncomment if you need GPU passthrough for Stonefish rendering (NVIDIA):
     # deploy:
     #   resources:
@@ -42,43 +45,4 @@ volumes:
   colcon_install:
   colcon_log:
 
-# services:
-#   robosub:
-#     build: .
-#     image: robosub_auv:latest
-#     container_name: robosub_dev
-#     volumes:
-#       - ./ros2_ws:/workspaces/RoboSub_AUV/ros2_ws
-#       - colcon_build:/workspaces/RoboSub_AUV/build
-#       - colcon_install:/workspaces/RoboSub_AUV/install
-#       - colcon_log:/workspaces/RoboSub_AUV/log
-#       - ./.docker.xauth:/tmp/.docker.xauth:rw
-#     environment:
-#       - XAUTHORITY=/tmp/.docker.xauth
-#       - QT_X11_NO_MITSHM=1
-#     stdin_open: true
-#     tty: true
-
-# volumes:
-#   colcon_build:
-#   colcon_install:
-#   colcon_log:
-# services:
-#   auv:
-#     image: auv:latest
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     container_name: auv_core
-#     restart: unless-stopped
-#     privileged: true
-#     devices:
-#       - /dev/ttyTHS1:/dev/ttyTHS1
-#       - /dev/gpiochip0:/dev/gpiochip0
-#       - /dev/gpiochip1:/dev/gpiochip1
-#     network_mode: host
-#     environment:
-#       - ROS_DOMAIN_ID=0
-#     stdin_open: true
-#     tty: true
-#     command: /bin/bash
+   
