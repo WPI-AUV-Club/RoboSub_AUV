@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from sympy import true
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
@@ -34,15 +33,16 @@ class ControlsNode(Node):
             10
         )
 
-        self.timer = self.create_timer(1.0, self.publish_twist)
-
     def handle_joy(self, msg: Joy):
         header = msg.header   # timestamp in the header is the time the data is received from the joystick
         axes = msg.axes       # float32[] the axes measurements from a joystick
         buttons = msg.buttons # int32[] the buttons measurements from a joystick 
 
         commanded_twist = Twist()
-        commanded_twist.linear
+        commanded_twist.linear.x = axes[1]
+        commanded_twist.angular.z = axes[0]
+
+        self.publish_twist(commanded_twist)
         return
 
     def publish_twist(self, msg: Twist):
