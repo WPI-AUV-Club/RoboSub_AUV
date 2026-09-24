@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from auv_motors.msg import MotorCommands
+from auv_motors.msg import MotorSpeeds
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
@@ -11,7 +11,7 @@ from geometry_msgs.msg import Twist
 Convert direction vectors into motor commands
 """
 
-class MotorCommandsNode(Node):
+class MotorSpeedsNode(Node):
     def __init__(self):
         super().__init__('motor_commands_node')
 
@@ -26,7 +26,7 @@ class MotorCommandsNode(Node):
         )
 
         self.motor_speeds_publisher = self.create_publisher(
-            MotorCommands, 
+            MotorSpeeds, 
             "/motor/speeds", 
             10
         )
@@ -38,7 +38,7 @@ class MotorCommandsNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MotorCommandsNode()
+    node = MotorSpeedsNode()
     executor = MultiThreadedExecutor()
     executor.add_node(node)
     try:

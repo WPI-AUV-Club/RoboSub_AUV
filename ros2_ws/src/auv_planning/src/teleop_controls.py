@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+from sympy import true
+import rclpy
+from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.callback_groups import ReentrantCallbackGroup
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Joy
+# from std_msgs.msg import Int32
+# from std_msgs.msg import Int32
+
+"""
+Takes in path plan and do controls
+"""
+
+class ControlsNode(Node):
+    def __init__(self):
+        super().__init__('controls_node')
+
+        self.callback_group = ReentrantCallbackGroup()
+
+        self.joystick_subscription = self.create_subscription(
+            Joy,
+            "/joy",
+            self.handle_joy,
+            10,
+            callback_group=self.callback_group,
+        )
+
+        self.twist_publisher = self.create_publisher(
+            Twist, 
+            "/twist", 
+            10
+        )
+
+        self.timer = self.create_timer(1.0, self.publish_twist)
+
+    def handle_joy(self, msg: Joy):
+        header = msg.header   # timestamp in the header is the time the data is received from the joystick
+        axes = msg.axes       # float32[] the axes measurements from a joystick
+        buttons = msg.buttons # int32[] the buttons measurements from a joystick 
+
+        commanded_twist = Twist()
+        commanded_twist.linear
+        return
+
+    def publish_twist(self, msg: Twist):
+        self.twist_publisher.publish(msg)
+        return
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ControlsNode()
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
+    try:
+        executor.spin()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == "__main__":
+    main()
