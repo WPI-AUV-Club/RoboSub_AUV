@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(test_package)
+project(auv_camera)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -24,8 +24,10 @@ install(DIRECTORY
 
 install(PROGRAMS
   # TODO: add more nodes here
-  src/test_node.py
-  DESTINATION lib/test_package
+  src/camera_processing.py
+  src/camera_sensor.py
+  src/object_detection.py
+  DESTINATION lib/auv_camera
 )
 
 
