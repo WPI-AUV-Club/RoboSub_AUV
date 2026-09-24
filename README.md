@@ -99,9 +99,10 @@ ros2 run auv_motors motor_commands.py
 ```
 
 Sim test:
-ros2 launch simulation robosub_sim.launch.p
+docker compose up -d --build robosub
+docker exec -it auv_core bash
+ros2 launch simulation robosub_sim.launch.py
 
 Run colcon build --symlink-install and source install/setup.bash everytime you add a new file or if you code it in C++
 
-type exit to leave the container or ctrl C 3 times
 Then docker compose down robosub to remove the container

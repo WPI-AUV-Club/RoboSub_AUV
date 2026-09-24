@@ -37,6 +37,4 @@ RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && cd /workspaces/RoboSub_AUV
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc \
     && echo "source /workspaces/RoboSub_AUV/install/setup.bash" >> ~/.bashrc
 
-<<<<<<< HEAD
-# Make Python scripts executable
 RUN find /workspaces/RoboSub_AUV/ros2_ws/src -name "*.py" -exec chmod +x {} \;
