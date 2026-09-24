@@ -38,3 +38,25 @@ fi
 
 ssh -o BatchMode=yes -o ConnectTimeout=2 "jetson@$JETSON_IP" \
     "sudo ip route replace default via 192.168.1.1 dev enP8p1s0 metric 100 2>/dev/null || true" 2>/dev/null || true
+
+CONFIG_FILE="$HOME/.ssh/config"
+if ! grep -q "Host jetson" "$CONFIG_FILE" 2>/dev/null; then
+    mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+    cat <<EOF >> "$CONFIG_FILE"
+
+Host jetson
+    HostName $JETSON_IP
+    User jetson
+    StrictHostKeyChecking accept-new
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+EOF
+    chmod 600 "$CONFIG_FILE"
+fi
+
+if command -v docker >/dev/null 2>&1; then
+    if ! docker context ls -q | grep -q "^jetson$"; then
+        docker context create jetson --docker "host=ssh://jetson" >/dev/null
+    fi
+    docker context use jetson >/dev/null
+fi

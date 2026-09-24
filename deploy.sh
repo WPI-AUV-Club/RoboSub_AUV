@@ -25,7 +25,6 @@ Commands:
   cross-run     Cross-compile on laptop, deploy, and enter container
   ssh           SSH into Jetson
   network       Configure host USB Ethernet interface
-  ssh-setup     Configure passwordless SSH
 
 Options:
   -h, --help    Show this help message
@@ -40,12 +39,9 @@ check_network() {
 
 ensure_context() {
     if ! ssh -o BatchMode=yes -o ConnectTimeout=2 jetson "true" >/dev/null 2>&1; then
-        "$SCRIPT_DIR/scripts/setup_ssh.sh"
+        "$SCRIPT_DIR/scripts/setup_network.sh"
     fi
-    if ! docker context ls -q | grep -q "^jetson$"; then
-        docker context create jetson --docker "host=ssh://jetson" >/dev/null
-    fi
-    docker context use jetson >/dev/null
+    docker context use jetson >/dev/null 2>&1 || true
 }
 
 cmd_exec() {
@@ -98,9 +94,6 @@ case "$ACTION" in
         ;;
     ssh)
         "$SCRIPT_DIR/scripts/ssh.sh" "$@"
-        ;;
-    ssh-setup)
-        "$SCRIPT_DIR/scripts/setup_ssh.sh"
         ;;
     exec)
         cmd_exec "$@"

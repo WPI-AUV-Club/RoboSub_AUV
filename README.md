@@ -1,6 +1,10 @@
 # WPI RoboSub AUV - Jetson Docker Stack
 
-## Network & SSH Setup
+ROS 2 Jazzy robotics stack for the WPI RoboSub AUV, containerized for the NVIDIA Jetson Orin Nano.
+
+---
+
+## Network Setup
 
 The laptop and Jetson connect over a dedicated USB-to-Ethernet interface:
 
@@ -8,23 +12,17 @@ The laptop and Jetson connect over a dedicated USB-to-Ethernet interface:
 * Jetson IP: `192.168.1.50/24`
 * Foxglove Bridge Port: `8765`
 
-### 1. Network Interface Setup
 Assigns the static IP to the USB Ethernet interface, brings it up, and enables NAT masquerading so the Jetson can access the internet through the laptop Wi-Fi:
 
 ```bash
 ./setup_network.sh
 ```
 
-### 2. Passwordless SSH Setup
-Generates an SSH key (if not already present), installs the public key on the Jetson, adds a `jetson` host entry to `~/.ssh/config`, and configures the Docker context:
-
-```bash
-./scripts/setup_ssh.sh
-```
-
-Once configured, connect directly with:
+Connect directly to the Jetson over SSH (no password required):
 ```bash
 ssh jetson
+# or
+ssh jetson@192.168.1.50
 ```
 
 ---
@@ -60,7 +58,6 @@ If the Jetson has no internet routing, the laptop cross-compiles the ARM64 image
 | Script | Action |
 | :--- | :--- |
 | `scripts/setup_network.sh` | Configures USB Ethernet interface (192.168.1.1) and NAT |
-| `scripts/setup_ssh.sh` | Configures passwordless SSH key, `~/.ssh/config`, and Docker context |
 | `scripts/build.sh` | Builds `auv:latest` natively on the Jetson |
 | `scripts/deploy.sh` | Builds on Jetson and starts `auv_core` in background |
 | `scripts/run.sh` | Runs container with UART and GPIO devices attached |
