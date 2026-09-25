@@ -84,7 +84,7 @@ The container passes through the following devices:
 ## ROS 2 Packages
 
 * `auv_motors`: Thruster controls and UART serial manager (`uart_manager.py`, `motor_commands.py`)
-  * Interfaces: `auv_motors/msg/MotorCommands`, `auv_motors/msg/MotorSpeeds`
+  * Interfaces: `auv_motors/msg/MotorSpeeds`, `auv_motors/msg/MotorSpeeds`
 * `auv_camera`: Camera drivers and vision pipeline (`camera_sensor.py`, `camera_processing.py`, `object_detection.py`)
 * `auv_planning`: State machine, path planning, and controls (`state_machine.py`, `path_planning.py`, `controls.py`, `localization.py`)
 * `auv_sensors`: Sensor acquisition and filtering (`sensor_node.py`, `leak_sensor.py`, `sensor_filtering.py`)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-from sympy import true
+
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 from std_msgs.msg import Int32
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TwistStamped
 
 """
 Takes in path plan and do controls
@@ -34,7 +34,7 @@ class ControlsNode(Node):
         )
 
         self.twist_publisher = self.create_publisher(
-            Twist, 
+            TwistStamped, 
             "/twist", 
             10
         )
@@ -42,8 +42,8 @@ class ControlsNode(Node):
         self.timer = self.create_timer(1.0, self.publish_twist)
 
     def publish_twist(self):
-        msg = Twist()
-        msg.linear.x = 1.0  # placeholder value for testing
+        msg = TwistStamped()
+        msg.twist.linear.x = 1.0  # placeholder value for testing
         self.twist_publisher.publish(msg)
         self.get_logger().info("Published twist")
 

@@ -109,7 +109,7 @@ class UARTManagerNode(Node):
     def send_command(self):
         for i in range(8):
             self.serial_port.write(
-                self.commanded_speeds[i].to_bytes(1, byteorder='big')
+                int(self.commanded_speeds[i]).to_bytes(1, byteorder='big')
             )
             
         self.serial_port.write(self.end_of_packet)

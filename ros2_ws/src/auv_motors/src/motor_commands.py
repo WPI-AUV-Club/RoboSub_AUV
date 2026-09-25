@@ -49,7 +49,6 @@ class MotorSpeedsNode(Node):
         lastTimestamp = msg.header.stamp
         
         # top left to bottom right for motors
-        
         motorSpeeds = [0]*8
         for i in range(4):
             motorSpeeds[i] += x
@@ -81,19 +80,21 @@ class MotorSpeedsNode(Node):
         if m > refrenceMaxSpeed:
             for i in range(8):
                 motorSpeeds[i] = motorSpeeds[i]/m * refrenceMaxSpeed
-        MotorSpeeds.thruster0 = motorSpeeds[0]
-        MotorSpeeds.thruster1 = motorSpeeds[1]
-        MotorSpeeds.thruster2 = motorSpeeds[2]
-        MotorSpeeds.thruster3 = motorSpeeds[3]
-        MotorSpeeds.thruster4 = motorSpeeds[4]
-        MotorSpeeds.thruster5 = motorSpeeds[5]
-        MotorSpeeds.thruster6 = motorSpeeds[6]
-        MotorSpeeds.thruster7 = motorSpeeds[7]
-        MotorSpeeds.time = lastTimestamp
-        self.motor_speeds_publisher.publish(MotorSpeeds)
+
+        commanded_speeds = MotorSpeeds()
+        commanded_speeds.thruster0 = motorSpeeds[0]
+        commanded_speeds.thruster1 = motorSpeeds[1]
+        commanded_speeds.thruster2 = motorSpeeds[2]
+        commanded_speeds.thruster3 = motorSpeeds[3]
+        commanded_speeds.thruster4 = motorSpeeds[4]
+        commanded_speeds.thruster5 = motorSpeeds[5]
+        commanded_speeds.thruster6 = motorSpeeds[6]
+        commanded_speeds.thruster7 = motorSpeeds[7]
+        commanded_speeds.header.stamp = lastTimestamp
+
+        self.motor_speeds_publisher.publish(commanded_speeds)
         return
 
-    
 
 def main(args=None):
     rclpy.init(args=args)

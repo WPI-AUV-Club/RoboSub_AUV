@@ -4,10 +4,8 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TwistStamped
 from sensor_msgs.msg import Joy
-# from std_msgs.msg import Int32
-# from std_msgs.msg import Int32
 
 """
 Takes in path plan and do controls
@@ -28,7 +26,7 @@ class ControlsNode(Node):
         )
 
         self.twist_publisher = self.create_publisher(
-            Twist, 
+            TwistStamped, 
             "/twist", 
             10
         )
@@ -38,14 +36,14 @@ class ControlsNode(Node):
         axes = msg.axes       # float32[] the axes measurements from a joystick
         buttons = msg.buttons # int32[] the buttons measurements from a joystick 
 
-        commanded_twist = Twist()
-        commanded_twist.linear.x = axes[1]
-        commanded_twist.angular.z = axes[0]
+        commanded_twist = TwistStamped()
+        commanded_twist.twist.linear.x = axes[1]
+        commanded_twist.twist.angular.z = axes[0]
 
         self.publish_twist(commanded_twist)
         return
 
-    def publish_twist(self, msg: Twist):
+    def publish_twist(self, msg: TwistStamped):
         self.twist_publisher.publish(msg)
         return
 
