@@ -20,6 +20,10 @@ Commands:
   test          Run ROS 2 tests
   stop          Stop container
   logs          Follow container logs
+  local         Build and run container locally on laptop
+  local-build   Build container image locally on laptop
+  local-run     Run container locally on laptop
+  local-test    Run ROS 2 tests locally on laptop
   cross-build   Cross-compile ARM64 image on laptop
   cross-deploy  Cross-compile on laptop, transfer, and deploy
   cross-run     Cross-compile on laptop, deploy, and enter container
@@ -82,6 +86,18 @@ case "$ACTION" in
         ;;
     shell)
         "$SCRIPT_DIR/scripts/shell.sh" "$@"
+        ;;
+    local|local-all)
+        "$SCRIPT_DIR/scripts/local_build_and_run.sh" "$@"
+        ;;
+    local-build)
+        "$SCRIPT_DIR/scripts/local_build.sh"
+        ;;
+    local-run)
+        "$SCRIPT_DIR/scripts/local_run.sh" "$@"
+        ;;
+    local-test)
+        "$SCRIPT_DIR/scripts/local_test.sh"
         ;;
     cross-build)
         "$SCRIPT_DIR/scripts/cross_build.sh"

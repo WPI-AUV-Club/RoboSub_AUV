@@ -51,6 +51,16 @@ If the Jetson has no internet routing, the laptop cross-compiles the ARM64 image
 ./deploy.sh cross-build   # Cross-compile on laptop without transferring
 ```
 
+### Option 3: Local Host Build and Test (No Jetson Required)
+Builds and runs the stack directly on the local machine using native Docker. Mounts the host `ros2_ws` directory into the container so code changes are reflected immediately without rebuilding:
+
+```bash
+./deploy.sh local         # Build and run container interactively on laptop
+./deploy.sh local-build   # Build image locally on laptop
+./deploy.sh local-run     # Run interactive container locally (with mounted ros2_ws)
+./deploy.sh local-test    # Run smoke tests locally on laptop
+```
+
 ---
 
 ## Script Reference (`scripts/`)
@@ -65,6 +75,10 @@ If the Jetson has no internet routing, the laptop cross-compiles the ARM64 image
 | `scripts/cross_build.sh` | Cross-compiles `linux/arm64` image locally on laptop |
 | `scripts/cross_deploy.sh` | Cross-compiles on laptop and streams to hard-wired Jetson |
 | `scripts/cross_build_and_run.sh` | Cross-compiles, streams, and enters container |
+| `scripts/local_build.sh` | Builds `auv:latest` locally on host |
+| `scripts/local_run.sh` | Runs interactive container locally on host |
+| `scripts/local_build_and_run.sh` | Builds and runs container locally on host |
+| `scripts/local_test.sh` | Verifies ROS 2 packages and interfaces locally |
 | `scripts/shell.sh` | Attaches bash shell to running `auv_core` container |
 | `scripts/ssh.sh` | Connects to Jetson host over SSH (`ssh jetson`) |
 | `scripts/test.sh` | Verifies ROS 2 packages, messages, and hardware libraries |
