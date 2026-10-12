@@ -2,6 +2,7 @@
 
 import math
 
+import numpy as np
 import rclpy
 import tf2_geometry_msgs  # noqa
 
@@ -98,9 +99,9 @@ class ControlsNode(Node):
         self.get_logger().info("Published twist")
 
     # EDIT TO WORK IN 3D SPACE
-    def send_speed(self, linear_speed: list[float], angular_speed: list[float]):
+    def send_speed(self, linear_speed, angular_speed):
         """
-        Sends speed to the /cmd_vel topic, which runs the turtlebot motors.
+        Sends twist to the /cmd_vel topic, which runs the AUV motors.
         :param linear_speed  [float, float, float] [m/s]   The linear speed in x y z.
         :param angular_speed [float, float, float] [rad/s] The angular speed for rotating around the body center, roll, pitch, yaw.
         """
@@ -109,20 +110,27 @@ class ControlsNode(Node):
         # self.get_logger().info(f"angular: {angular_speed}")
 
         # if infinity, set to 0
-        if not math.isfinite(linear_speed):
-            linear_speed = 0.0
-        if not math.isfinite(angular_speed):
-            angular_speed = 0.0
+        if not np.isfinite(linear_speed):
+            linear_speed = [0.0, 0.0, 0.0]
+        if not np.isfinite(angular_speed):
+            angular_speed = [0.0, 0.0, 0.0]
 
-        linear_speed = max(-MAX_LINEAR_SPEED, min(linear_speed, MAX_LINEAR_SPEED))
-        angular_speed = max(-MAX_ANGULAR_SPEED, min(angular_speed, MAX_ANGULAR_SPEED))
+        # if total linear speed (magnitude of speed vector) is greater than MAX SPEED then clamp it down while preserving geometric orientation.
+        linear_speed = np.asarray(linear_speed, float)
+        mag = np.linalg.norm(linear_speed)
+        if mag > MAX_LINEAR_SPEED:
+            linear_speed *= MAX_LINEAR_SPEED / mag
+
+        angular_speed = np.clip(
+            angular_speed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED
+        ).tolist()
 
         # self.get_logger().info(f"linear speed: {linear_speed}")
         # self.get_logger().info(f"angular speed: {angular_speed}")
 
         msg.twist.linear.x = linear_speed[0]
         msg.twist.linear.y = linear_speed[1]
-        msg.twist.linear.z =  linear_speed[2]
+        msg.twist.linear.z = linear_speed[2]
         msg.twist.angular.z = angular_speed[2]
         msg.twist.angular.z = angular_speed[0]
         msg.twist.angular.z = angular_speed[0]
@@ -198,87 +206,149 @@ class ControlsNode(Node):
 
         return
 
-    def pure_pursuit(self, path, LFindex):
-        if not path:
-            return [self.px, self.py, self.pz], 0
+    def plos(self, path, LFindex, k1_psi=1.0, k2_psi=0.05, k1_theta=1.0, k2_theta=0.05):
+        """
+        Path following algorithm.
+        path    : list of (x, y, z) waypoints, z down (NED)
+        LFindex : index i of the current segment (path[i] -> path[i+1])
+        Returns : (r_d, q_d, LFindex)  yaw-rate and pitch-rate commands, updated index
+        Assumes self.psi (yaw) and self.theta (pitch) hold the robot's attitude;
+        rename them to whatever your state uses.
+        """
+        if not path or len(path) < 2:
+            return 0.0, 0.0, 0
 
-        last_found_index = max(0, min(LFindex, len(path) - 1))
-        goal_pt = [path[last_found_index][0], path[last_found_index][1]]
+        p = np.array([self.px, self.py, self.pz], dtype=float)
+        i = max(0, min(LFindex, len(path) - 2))
 
-        for i in range(last_found_index, len(path) - 1):
-            x1, y1, z1 = path[i]
-            x2, y2, z2 = path[i + 1]
+        while True:
+            Wi = np.array(path[i], dtype=float)
+            Wj = np.array(path[i + 1], dtype=float)
+            dW = Wj - Wi
+            seg_len = np.linalg.norm(d)
 
-            x1_offset = x1 - self.px
-            y1_offset = y1 - self.py
-            z1_offset = z1 - self.pz
-            x2_offset = x2 - self.px
-            y2_offset = y2 - self.py
-            z2_offset = z2 - self.pz
+            # skip duplicate waypoints (zero-length segment)
+            if seg_len < 1e-9:
+                if i < len(path) - 2:
+                    i += 1
+                    continue
+                return 0.0, 0.0, i
 
-            dx = x2_offset - x1_offset
-            dy = y2_offset - y1_offset
-            dz = z2_offset - z1_offset
-            dr2 = dx**2 + dy**2 + dz**2
-            if dr2 == 0:
+            alpha = math.atan2(dW[1], dW[0])
+            beta = math.atan2(-dW[2], math.hypot(dW[0], dW[1]))  # z down: climb > 0
+
+            cosa, sina = math.cos(alpha), math.sin(alpha)
+            cosb, sinb = math.cos(beta), math.sin(beta)
+            Rz = np.array([[cosa, sina, 0.0], [-sina, cosa, 0.0], [0.0, 0.0, 1.0]])
+            Ry = np.array([[cosb, 0.0, -sinb], [0.0, 1.0, 0.0], [sinb, 0.0, cosb]])
+
+            # path-frame error: ex along-track, ey cross-track, ez vertical-track
+            ex, ey, ez = Ry @ Rz @ (p - Wi)
+
+            # passed the end of this segment? move on to the next one
+            if ex >= seg_len and i < len(path) - 2:
+                i += 1
+                self.get_logger().debug(f"plos segment index: {i}")
                 continue
+            break
 
-            D = x1_offset * y2_offset - x2_offset * y1_offset
-            discriminant = LOOK_AHEAD_DIST**2 * dr2 - D**2
-            if discriminant < 0:
-                continue
+        # pure pursuit terms: aim at the next waypoint
+        psi_d = math.atan2(Wj[1] - p[1], Wj[0] - p[0])
+        Wj_R, p_R = Rz @ Wj, Rz @ p
+        theta_d = math.atan2(p_R[2] - Wj_R[2], Wj_R[0] - p_R[0])
 
-            sqrt_disc = math.sqrt(discriminant)
+        dpsi = (psi_d - self.psi + math.pi) % (
+            2.0 * math.pi
+        ) - math.pi  # wrap to [-pi, pi]
 
-            x_sol1 = (D * dy + sgn(dy) * dx * sqrt_disc) / dr2
-            y_sol1 = (-D * dx + abs(dy) * sqrt_disc) / dr2
-            x_sol2 = (D * dy - sgn(dy) * dx * sqrt_disc) / dr2
-            y_sol2 = (-D * dx - abs(dy) * sqrt_disc) / dr2
+        # PLOS: pursuit term + line-of-sight (cross-track) term
+        r_d = k1_psi * dpsi + k2_psi * (-ey)
+        q_d = k1_theta * (theta_d - self.pth) + k2_theta * ez
 
-            pt1 = [x_sol1 + self.px, y_sol1 + self.py]
-            pt2 = [x_sol2 + self.px, y_sol2 + self.py]
+        return r_d, q_d, i
 
-            minX, maxX = min(x1, x2), max(x1, x2)
-            minY, maxY = min(y1, y2), max(y1, y2)
-            eps = 1e-6
-            candidates = []
-            if (
-                minX - eps <= pt1[0] <= maxX + eps
-                and minY - eps <= pt1[1] <= maxY + eps
-            ):
-                candidates.append(pt1)
-            if (
-                minX - eps <= pt2[0] <= maxX + eps
-                and minY - eps <= pt2[1] <= maxY + eps
-            ):
-                candidates.append(pt2)
-            if not candidates:
-                continue
+    #  def pure_pursuit(self, path, LFindex):
+    #     if not path:
+    #         return [self.px, self.py, self.pz], 0
 
-            # Prefer the candidate farther along the current segment (toward segment end).
-            if len(candidates) == 2:
-                d1 = distance_between_pts(candidates[0], [x2, y2])
-                d2 = distance_between_pts(candidates[1], [x2, y2])
-                candidate = candidates[0] if d1 < d2 else candidates[1]
-            else:
-                candidate = candidates[0]
+    #     last_found_index = max(0, min(LFindex, len(path) - 1))
+    #     goal_pt = [path[last_found_index][0], path[last_found_index][1]]
 
-            # Only accept intersections that are ahead along the segment.
-            if distance_between_pts(candidate, [x2, y2]) < distance_between_pts(
-                [self.px, self.py], [x2, y2]
-            ):
-                goal_pt = candidate
-                last_found_index = i
-                self.get_logger().debug(f"lf index 1: {last_found_index}")
-                break
-            else:
-                last_found_index = i + 1
-                self.get_logger().debug(f"lf index 2: {last_found_index}")
+    #     for i in range(last_found_index, len(path) - 1):
+    #         x1, y1, z1 = path[i]
+    #         x2, y2, z2 = path[i + 1]
 
-        if any(math.isnan(coord) for coord in goal_pt):
-            goal_pt = [self.px, self.py]
+    #         x1_offset = x1 - self.px
+    #         y1_offset = y1 - self.py
+    #         z1_offset = z1 - self.pz
+    #         x2_offset = x2 - self.px
+    #         y2_offset = y2 - self.py
+    #         z2_offset = z2 - self.pz
 
-        return goal_pt, last_found_index
+    #         dx = x2_offset - x1_offset
+    #         dy = y2_offset - y1_offset
+    #         dz = z2_offset - z1_offset
+    #         dr2 = dx**2 + dy**2
+
+    #         if dr2 == 0:
+    #             continue
+
+    #         D = x1_offset * y2_offset - x2_offset * y1_offset
+    #         discriminant = LOOK_AHEAD_DIST**2 * dr2 - D**2
+    #         if discriminant < 0:
+    #             continue
+
+    #         sqrt_disc = math.sqrt(discriminant)
+
+    #         x_sol1 = (D * dy + sgn(dy) * dx * sqrt_disc) / dr2
+    #         y_sol1 = (-D * dx + abs(dy) * sqrt_disc) / dr2
+    #         x_sol2 = (D * dy - sgn(dy) * dx * sqrt_disc) / dr2
+    #         y_sol2 = (-D * dx - abs(dy) * sqrt_disc) / dr2
+
+    #         pt1 = [x_sol1 + self.px, y_sol1 + self.py]
+    #         pt2 = [x_sol2 + self.px, y_sol2 + self.py]
+
+    #         minX, maxX = min(x1, x2), max(x1, x2)
+    #         minY, maxY = min(y1, y2), max(y1, y2)
+    #         eps = 1e-6
+    #         candidates = []
+    #         if (
+    #             minX - eps <= pt1[0] <= maxX + eps
+    #             and minY - eps <= pt1[1] <= maxY + eps
+    #         ):
+    #             candidates.append(pt1)
+    #         if (
+    #             minX - eps <= pt2[0] <= maxX + eps
+    #             and minY - eps <= pt2[1] <= maxY + eps
+    #         ):
+    #             candidates.append(pt2)
+    #         if not candidates:
+    #             continue
+
+    #         # Prefer the candidate farther along the current segment (toward segment end).
+    #         if len(candidates) == 2:
+    #             d1 = distance_between_pts(candidates[0], [x2, y2])
+    #             d2 = distance_between_pts(candidates[1], [x2, y2])
+    #             candidate = candidates[0] if d1 < d2 else candidates[1]
+    #         else:
+    #             candidate = candidates[0]
+
+    #         # Only accept intersections that are ahead along the segment.
+    #         if distance_between_pts(candidate, [x2, y2]) < distance_between_pts(
+    #             [self.px, self.py], [x2, y2]
+    #         ):
+    #             goal_pt = candidate
+    #             last_found_index = i
+    #             self.get_logger().debug(f"lf index 1: {last_found_index}")
+    #             break
+    #         else:
+    #             last_found_index = i + 1
+    #             self.get_logger().debug(f"lf index 2: {last_found_index}")
+
+    #     if any(math.isnan(coord) for coord in goal_pt):
+    #         goal_pt = [self.px, self.py]
+
+    #     return goal_pt, last_found_index
 
     @staticmethod
     def _collapse_duplicate_waypoints(
