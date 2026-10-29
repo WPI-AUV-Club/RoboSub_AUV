@@ -4,3 +4,6 @@
 /build
 /.devcontainer
 /ros2_ws/src/lib/*
+.pytest
+__pycache__
+*.pyc
