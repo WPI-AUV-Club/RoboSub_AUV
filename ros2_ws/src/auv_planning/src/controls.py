@@ -48,9 +48,10 @@ class ControlsNode(Node):
         super().__init__("controls_node")
 
         self.callback_group = ReentrantCallbackGroup()
-
+        
+        # CHECK WHY LIST[INT32] DID NOT WORK, INT32 IS TEMPORARY
         self.path_subscription = self.create_subscription(
-            list[Int32],
+            Int32,
             "/path",
             self.handle_path,
             10,
@@ -85,6 +86,7 @@ class ControlsNode(Node):
         self.py = 0.0
         self.pz = 0.0
         self.pth = 0.0
+        self.psi = 0.0
 
         self.pursuing = False
         self.points = []
@@ -225,7 +227,7 @@ class ControlsNode(Node):
             Wi = np.array(path[i], dtype=float)
             Wj = np.array(path[i + 1], dtype=float)
             dW = Wj - Wi
-            seg_len = np.linalg.norm(d)
+            seg_len = np.linalg.norm(dW)
 
             # skip duplicate waypoints (zero-length segment)
             if seg_len < 1e-9:
