@@ -26,7 +26,9 @@ RUN apt-get update \
 RUN pip3 install --no-cache-dir --break-system-packages \
     pyserial \
     Jetson.GPIO \
-    simple-pid
+    simple-pid \
+    adafruit-blinka \
+    adafruit-circuitpython-bno08x 
 
 # Set working directory
 WORKDIR /workspaces/RoboSub_AUV
